@@ -1,0 +1,8 @@
+MC_PinnedHeaderList
+
+Its a ListView with fancy pinned headers.
+
+TODO:
+
+(1) get static holder class working (speeds up drawing performance).
+(2) transition effects for the letter blocks.
