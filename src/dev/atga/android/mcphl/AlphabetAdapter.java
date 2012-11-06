@@ -1,7 +1,9 @@
 package dev.atga.android.mcphl;
 
 import android.content.Context;
+import android.graphics.Point;
 import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,62 +19,61 @@ public class AlphabetAdapter extends ArrayAdapter<String> {
 	Context context; 
     int layoutResourceId;    
     String[][] data = null;
-	
+    private LayoutInflater inflater;
+    int width;
+    	
 	public AlphabetAdapter(Context context, int textViewResourceId,
-			String[] input) {
+			String[] input, int width) {
 		super(context, textViewResourceId, input);
 		this.layoutResourceId = textViewResourceId;
         this.context = context;
         this.data = create2DimDataArray(input);
+        this.width = width;
+        
+        inflater = LayoutInflater.from(context);
 	}
 	
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		TextView header;
-	    TextView txt;
-		View row = convertView;
-		//ViewHolder holder;
-						
-		//if(row == null) {
-		
+		ViewHolder holder;
+
+		Log.d("ATGA", "position: " + position);
+		if(convertView == null) {
+			Log.d("ATGA", "convertView == null : true");
 			//LayoutInflater inflater = ((Activity)context).getLayoutInflater();
-			LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			row = inflater.inflate(layoutResourceId, parent, false);
-		    //holder = new ViewHolder();
-		    //holder.header = (TextView) row.findViewById(R.id.header);
-		    header = (TextView) row.findViewById(R.id.header);
-			//holder.txt = (TextView) row.findViewById(R.id.label);
-			txt = (TextView) row.findViewById(R.id.label);
-			//row.setTag(holder);
-		//}
-		//else {
-		//	holder = (ViewHolder) row.getTag();
-		//}
+			//LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			convertView = inflater.inflate(layoutResourceId, parent, false);
+		    holder = new ViewHolder();
+		    holder.header = (TextView) convertView.findViewById(R.id.header);
+			holder.txt = (TextView) convertView.findViewById(R.id.label);
+			convertView.setTag(holder);
+		} else {
+			holder = (ViewHolder) convertView.getTag();
+		}
         
 		//load the text from the 2dim array into position
-		txt.setText(data[position][1]);
-		
+		holder.txt.setText(data[position][1]);
+		//load the header if necessary
 		if (data[position][0].equals("null")) {
-			
-			header.setText("");
-			header.setBackgroundColor(0xFF000000); //wtf?!
+			holder.header.setText("");
+			holder.header.setBackgroundColor(0xFF000000); //wtf?!
+			holder.header.setHeight(((int) (width*0.2)));
+			holder.header.setWidth(((int) (width*0.2)));
+		} else {
+			holder.header.setText(data[position][0]);
+			//holder.header.setBackgroundColor(0xFF00FFFF);
+			holder.header.setBackgroundColor(0xFFff0000);
+			holder.header.setHeight(((int) (width*0.2)));
+			holder.header.setWidth(((int) (width*0.2)));
 		}
-		
-		else {
-			Log.d("ATGA","HEADER");
-			header.setText(data[position][0]);
-			header.setBackgroundColor(0xFF00FFFF);
-		}
-		
 
-		return row;
+		return convertView;
 	}
 	
-	//buffer for efficiency
-	//static class ViewHolder {
-	//static TextView header;
-    //static TextView txt;
-	//}
+	static class ViewHolder {
+		TextView header;
+		TextView txt;
+	}
 	
     
     //create 2dim data array(1st column is header, 2nd column is data)

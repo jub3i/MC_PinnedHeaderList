@@ -39,19 +39,6 @@ public class MainActivity extends ListActivity implements ListView.OnScrollListe
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-                
-        //Use an existing ListAdapter that will map an array
-        //of strings to TextViews
-        setListAdapter(new AlphabetAdapter(this,
-                R.layout.list_item, mStrings));
-        //setListAdapter(new ArrayAdapter<String>(this,
-        //        R.layout.list_item, R.id.label, mStrings));
-        
-        
-        getListView().setOnScrollListener(this);
-        getListView().setBackgroundColor(Color.BLACK);
-        getListView().setDivider(null);
-        getListView().setDividerHeight(0);
         
         //get the width and height of display
         Display display = getWindowManager().getDefaultDisplay();
@@ -66,7 +53,19 @@ public class MainActivity extends ListActivity implements ListView.OnScrollListe
         } catch (NoSuchMethodError e) { 
         	width = display.getWidth(); 
         	height = display.getHeight(); 
-        }        
+        }    
+        
+        //Adapter requires array of strings in alphabetical order
+        setListAdapter(new AlphabetAdapter(this,
+                R.layout.list_item, mStrings, width));
+        
+        //setup ListView
+        getListView().setOnScrollListener(this);
+        getListView().setBackgroundColor(Color.BLACK);
+        getListView().setDivider(null);
+        getListView().setDividerHeight(0);
+        
+            
         
         //setup the dynamic view
         LayoutInflater inflate = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -79,10 +78,6 @@ public class MainActivity extends ListActivity implements ListView.OnScrollListe
         
         final int x = (int) (width*0.05);
         final int y = 40;
-        
-        Log.d("ATGA", "width = " + width + " | width*0.2= " + width*0.2);
-        
-        
         
         mWindowManager = (WindowManager)getSystemService(Context.WINDOW_SERVICE);
         mHandler.post(new Runnable() {
@@ -138,8 +133,6 @@ public class MainActivity extends ListActivity implements ListView.OnScrollListe
 
             }
             mDialogText.setText(((Character)firstLetter).toString());
-            //mHandler.removeCallbacks(mRemoveWindow);
-            //mHandler.postDelayed(mRemoveWindow, 3000);
             mPrevLetter = firstLetter;
         }
     }
@@ -156,20 +149,20 @@ public class MainActivity extends ListActivity implements ListView.OnScrollListe
     
     private String[] mStrings = {
             "Abbaye de Belloc", "Abbaye du Mont des Cats", "Abertam",
-            "Abondance", "Ackawi", "Acorn", "Adelost", "Affidelice au Chablis",
-            "Afuega'l Pitu", "Airag", "Airedale", "Aisy Cendre",
-            "Allgauer Emmentaler", "Alverca", "Ambert", "American Cheese",
-            "Ami du Chambertin", "Anejo Enchilado", "Anneau du Vic-Bilh",
+            //"Abondance", "Ackawi", "Acorn", "Adelost", "Affidelice au Chablis",
+            //"Afuega'l Pitu", "Airag", "Airedale", "Aisy Cendre",
+            //"Allgauer Emmentaler", "Alverca", "Ambert", "American Cheese",
+            //"Ami du Chambertin", "Anejo Enchilado", "Anneau du Vic-Bilh",
             "Anthoriro", "Appenzell", "Aragon", "Ardi Gasna", "Ardrahan",
             "Armenian String", "Aromes au Gene de Marc", "Asadero", "Asiago",
             "Aubisque Pyrenees", "Autun", "Avaxtskyr", "Baby Swiss", "Babybel",
             "Baguette Laonnaise", "Bakers", "Baladi", "Balaton", "Bandal",
-            "Banon", "Barry's Bay Cheddar", "Basing", "Basket Cheese",
-            "Bath Cheese", "Bavarian Bergkase", "Baylough", "Beaufort",
-            "Beauvoorde", "Beenleigh Blue", "Beer Cheese", "Bel Paese",
-            "Bergader", "Bergere Bleue", "Berkswell", "Beyaz Peynir",
-            "Bierkase", "Bishop Kennedy", "Blarney", "Bleu d'Auvergne",
-            "Bleu de Gex", "Bleu de Laqueuille", "Bleu de Septmoncel",
+            //"Banon", "Barry's Bay Cheddar", "Basing", "Basket Cheese",
+            //"Bath Cheese", "Bavarian Bergkase", "Baylough", "Beaufort",
+            //"Beauvoorde", "Beenleigh Blue", "Beer Cheese", "Bel Paese",
+            //"Bergader", "Bergere Bleue", "Berkswell", "Beyaz Peynir",
+            //"Bierkase", "Bishop Kennedy", "Blarney", "Bleu d'Auvergne",
+            /*"Bleu de Gex", "Bleu de Laqueuille", "Bleu de Septmoncel",
             "Bleu Des Causses", "Blue", "Blue Castello", "Blue Rathgore",
             "Blue Vein (Australian)", "Blue Vein Cheeses", "Bocconcini",
             "Bocconcini (Australian)", "Boeren Leidenkaas", "Bonchester",
@@ -180,14 +173,14 @@ public class MainActivity extends ListActivity implements ListView.OnScrollListe
             "Brie de Meaux", "Brie de Melun", "Brillat-Savarin", "Brin",
             "Brin d' Amour", "Brin d'Amour", "Brinza (Burduf Brinza)",
             "Briquette de Brebis", "Briquette du Forez", "Broccio",
-            "Broccio Demi-Affine", "Brousse du Rove", "Bruder Basil",
+            */"Broccio Demi-Affine", "Brousse du Rove", "Bruder Basil",
             "Brusselae Kaas (Fromage de Bruxelles)", "Bryndza",
             "Buchette d'Anjou", "Buffalo", "Burgos", "Butte", "Butterkase",
             "Button (Innes)", "Buxton Blue", "Cabecou", "Caboc", "Cabrales",
             "Cachaille", "Caciocavallo", "Caciotta", "Caerphilly",
             "Cairnsmore", "Calenzana", "Cambazola", "Camembert de Normandie",
             "Canadian Cheddar", "Canestrato", "Cantal", "Caprice des Dieux",
-            "Capricorn Goat", "Capriole Banon", "Carre de l'Est",
+            /*"Capricorn Goat", "Capriole Banon", "Carre de l'Est",
             "Casciotta di Urbino", "Cashel Blue", "Castellano", "Castelleno",
             "Castelmagno", "Castelo Branco", "Castigliano", "Cathelain",
             "Celtic Promise", "Cendre d'Olivet", "Cerney", "Chabichou",
@@ -199,7 +192,7 @@ public class MainActivity extends ListActivity implements ListView.OnScrollListe
             "Corleggy", "Cornish Pepper", "Cotherstone", "Cotija",
             "Cottage Cheese", "Cottage Cheese (Australian)", "Cougar Gold",
             "Coulommiers", "Coverdale", "Crayeux de Roncq", "Cream Cheese",
-            "Cream Havarti", "Crema Agria", "Crema Mexicana", "Creme Fraiche",
+            */"Cream Havarti", "Crema Agria", "Crema Mexicana", "Creme Fraiche",
             "Crescenza", "Croghan", "Crottin de Chavignol",
             "Crottin du Chavignol", "Crowdie", "Crowley", "Cuajada", "Curd",
             "Cure Nantais", "Curworthy", "Cwmtawe Pecorino",
